@@ -46,9 +46,8 @@ jobs:
       - name: Cai Inno Setup
         run: choco install innosetup -y
       - name: Dong goi bo cai dat EXE
-        run: ISCC.exe windows-installer.iss
-      - run: copy Output\astra-telos-windows-setup.exe ..\astra-telos-windows.exe
-        working-directory: Output
+        run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" windows-installer.iss'
+      - run: copy Output\astra-telos-windows-setup.exe astra-telos-windows.exe
       - uses: actions/upload-artifact@v4
         with:
           name: exe
