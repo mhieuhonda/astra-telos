@@ -99,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final bytes = f.bytes;
     if (bytes == null) return;
     final isImage = (f.extension ?? '').toLowerCase().contains(RegExp(r'png|jpg|jpeg|gif|webp'));
-    final req = http.Request('POST', Uri.parse('${Session.baseUrl}/api/upload'));
+    final req = http.Request('POST', Uri.parse('${Cloud.baseUrl}/api/upload'));
     req.headers['Authorization'] = 'Bearer ${Session.token}';
     req.headers['X-File-Name'] = Uri.encodeComponent(f.name);
     req.bodyBytes = bytes;
@@ -168,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               if (kind == 'image' && fileUrl.isNotEmpty)
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: CachedNetworkImage(imageUrl: '${Session.baseUrl}$fileUrl', httpHeaders: {'Authorization': 'Bearer ${Session.token}'}, width: 220, fit: BoxFit.cover),
+                                  child: CachedNetworkImage(imageUrl: '${Cloud.baseUrl}$fileUrl', httpHeaders: {'Authorization': 'Bearer ${Session.token}'}, width: 220, fit: BoxFit.cover),
                                 )
                               else if (kind == 'file' && fileUrl.isNotEmpty)
                                 Row(mainAxisSize: MainAxisSize.min, children: [

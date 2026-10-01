@@ -4,25 +4,25 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+class Cloud {
+  static const baseUrl = 'https://vector-principle-behavior-compare.trycloudflare.com';
+}
+
 class Session {
-  static String baseUrl = 'http://127.0.0.1:8085';
   static String? token;
   static Map<String, dynamic>? user;
 
   static Future<void> load() async {
     final p = await SharedPreferences.getInstance();
-    baseUrl = p.getString('baseUrl') ?? baseUrl;
     token = p.getString('token');
     final u = p.getString('user');
     user = u == null ? null : jsonDecode(u) as Map<String, dynamic>;
   }
 
-  static Future<void> save(String base, String t, Map<String, dynamic> u) async {
+  static Future<void> save(String t, Map<String, dynamic> u) async {
     final p = await SharedPreferences.getInstance();
-    baseUrl = base;
     token = t;
     user = u;
-    await p.setString('baseUrl', base);
     await p.setString('token', t);
     await p.setString('user', jsonEncode(u));
   }
@@ -43,17 +43,23 @@ class Api {
       };
 
   static Future<Map<String, dynamic>> post(String path, Map<String, dynamic> body) async {
-    final r = await http.post(Uri.parse('${Session.baseUrl}$path'), headers: headers, body: jsonEncode(body));
+    final r = await http
+        .post(Uri.parse('${Cloud.baseUrl}$path'), headers: headers, body: jsonEncode(body))
+        .timeout(const Duration(seconds: 20));
     return _decode(r.body);
   }
 
   static Future<Map<String, dynamic>> put(String path, Map<String, dynamic> body) async {
-    final r = await http.put(Uri.parse('${Session.baseUrl}$path'), headers: headers, body: jsonEncode(body));
+    final r = await http
+        .put(Uri.parse('${Cloud.baseUrl}$path'), headers: headers, body: jsonEncode(body))
+        .timeout(const Duration(seconds: 20));
     return _decode(r.body);
   }
 
   static Future<Map<String, dynamic>> get(String path) async {
-    final r = await http.get(Uri.parse('${Session.baseUrl}$path'), headers: headers);
+    final r = await http
+        .get(Uri.parse('${Cloud.baseUrl}$path'), headers: headers)
+        .timeout(const Duration(seconds: 20));
     return _decode(r.body);
   }
 
@@ -74,7 +80,7 @@ class SocketBus {
   void connect() {
     close();
     if (Session.token == null) return;
-    final ws = Session.baseUrl.replaceFirst('http', 'ws');
+    final ws = Cloud.baseUrl.replaceFirst('https', 'wss').replaceFirst('http', 'ws');
     _ch = WebSocketChannel.connect(Uri.parse('$ws/ws?token=${Session.token}'));
     _ch!.stream.listen((e) {
       try {

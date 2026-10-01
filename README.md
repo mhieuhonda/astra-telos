@@ -1,7 +1,18 @@
-# Astra Telos — Ứng dụng nhắn tin sang trọng
+# Astra Telos — Ứng dụng nhắn tin cho mọi người
 
-Tech stack: Flutter + Dart. Tương thích hoàn hảo: Android (7.1.1+), Windows, Linux.
-Máy này làm server chính + database (SQLite) + storage (file cục bộ).
+Tech stack: Flutter + Dart. Chạy trên Android (7.1.1+), Windows, Linux.
+Người dùng chỉ cần cài app, đăng ký bằng số điện thoại là nhắn tin được ngay,
+giống Messenger/Zalo — không cần biết gì về máy chủ.
+
+Hạ tầng đám mây Astra Telos (server + SQLite + storage) do đội ngũ vận hành,
+app tự kết nối sẵn, người dùng không phải nhập địa chỉ server.
+
+## Trải nghiệm người dùng
+
+- Đăng ký / đăng nhập bằng số điện thoại + mật khẩu
+- 3 tab quen thuộc: Tin nhắn · Danh bạ · Hồ sơ
+- Nhắn tin realtime, xem "đang nhập...", gửi ảnh/tệp, báo đã xem
+- Giao diện vàng sang trọng trên nền đen, toàn bộ tiếng Việt
 
 ## Cấu trúc
 
@@ -48,6 +59,11 @@ sang trọng trên nền đen, toàn bộ tiếng Việt.
 
 ## Tài khoản
 
-Mở app, nhập địa chỉ server (mặc định `http://127.0.0.1:8085`),
-Đăng ký tài khoản mới rồi Đăng nhập. Tìm người dùng khác theo tên
-hoặc tên tài khoản để bắt đầu trò chuyện realtime.
+Mở app → Đăng ký bằng số điện thoại → Đăng nhập.
+Tìm bạn bè bằng số điện thoại hoặc tên để bắt đầu trò chuyện realtime.
+
+## Dành cho nhà phát triển
+
+Địa chỉ đám mây được gắn sẵn trong `app/lib/core.dart` (lớp `Cloud`).
+Muốn tự host: chạy `server/` bằng `dart run bin/server.dart`,
+rồi đổi `Cloud.baseUrl` thành địa chỉ của bạn và build lại app.

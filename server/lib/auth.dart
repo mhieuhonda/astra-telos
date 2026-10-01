@@ -21,15 +21,18 @@ class AuthService {
       register(String name, String handle, String password) async {
     name = name.trim();
     handle = handle.trim().toLowerCase();
-    if (name.isEmpty || handle.length < 3 || password.length < 6) {
+    if (name.isEmpty || password.length < 6) {
       return (ok: false, message: 'Thông tin chưa hợp lệ', user: null, token: null);
     }
-    if (!RegExp(r'^[a-z0-9_.]+$').hasMatch(handle)) {
-      return (ok: false, message: 'Tên tài khoản chỉ gồm chữ, số, _ và .', user: null, token: null);
+    final phone = RegExp(r'^0\d{9}$');
+    final legacy = RegExp(r'^[a-z0-9_.]+$');
+    final isPhone = phone.hasMatch(handle);
+    if (!isPhone && (handle.length < 3 || !legacy.hasMatch(handle))) {
+      return (ok: false, message: 'Số điện thoại chưa đúng (VD: 0912345678)', user: null, token: null);
     }
     final exists = store.db.select('SELECT id FROM users WHERE handle=?', [handle]);
     if (exists.isNotEmpty) {
-      return (ok: false, message: 'Tên tài khoản đã được sử dụng', user: null, token: null);
+      return (ok: false, message: isPhone ? 'Số điện thoại đã được đăng ký' : 'Tên tài khoản đã được sử dụng', user: null, token: null);
     }
     final id = const Uuid().v4();
     final now = DateTime.now().millisecondsSinceEpoch;
@@ -47,7 +50,7 @@ class AuthService {
     handle = handle.trim().toLowerCase();
     final rows = store.db.select('SELECT * FROM users WHERE handle=?', [handle]);
     if (rows.isEmpty) {
-      return (ok: false, message: 'Tài khoản không tồn tại', user: null, token: null);
+      return (ok: false, message: 'Số điện thoại chưa được đăng ký', user: null, token: null);
     }
     final row = rows.first;
     if (!BCrypt.checkpw(password, row['pass_hash'] as String)) {
