@@ -1,0 +1,23 @@
+name: astra_telos
+description: Astra Telos - Ung dung nhan tin sang trong, muot ma cho Android, Windows, Linux.
+publish_to: none
+version: 1.0.0+1
+environment:
+  sdk: ^3.4.0
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  web_socket_channel: ^3.0.1
+  shared_preferences: ^2.2.2
+  intl: ^0.19.0
+  file_picker: ^8.0.0
+  image_picker: ^1.1.2
+  cached_network_image: ^3.3.1
+  google_fonts: ^6.2.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+flutter:
+  uses-material-design: true

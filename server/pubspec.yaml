@@ -1,0 +1,19 @@
+name: astra_telos_server
+description: Máy chủ Astra Telos chạy trên máy này.
+version: 1.0.0
+environment:
+  sdk: ^3.4.0
+dependencies:
+  shelf: ^1.4.1
+  shelf_router: ^1.1.4
+  shelf_web_socket: ^2.0.0
+  web_socket_channel: ^3.0.1
+  sqlite3: ^2.4.0
+  bcrypt: ^1.1.3
+  dart_jsonwebtoken: ^2.12.0
+  crypto: ^3.0.3
+  mime: ^1.0.5
+  uuid: ^4.4.0
+  path: ^1.9.0
+dev_dependencies:
+  lints: ^4.0.0

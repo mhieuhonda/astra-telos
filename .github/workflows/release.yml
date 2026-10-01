@@ -1,0 +1,94 @@
+name: Phat hanh Astra Telos
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    name: Build APK Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+        working-directory: app
+      - run: flutter build apk --release
+        working-directory: app
+      - run: cp app/build/app/outputs/flutter-apk/app-release.apk astra-telos-android.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: astra-telos-android.apk
+
+  windows:
+    name: Build EXE Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+        working-directory: app
+      - run: flutter build windows --release
+        working-directory: app
+      - name: Cai Inno Setup
+        run: choco install innosetup -y
+      - name: Dong goi bo cai dat EXE
+        run: ISCC.exe windows-installer.iss
+      - run: copy Output\astra-telos-windows-setup.exe ..\astra-telos-windows.exe
+        working-directory: Output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exe
+          path: astra-telos-windows.exe
+
+  linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cai phu thuoc Linux
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter config --enable-linux-desktop
+      - run: flutter pub get
+        working-directory: app
+      - run: flutter build linux --release
+        working-directory: app
+      - run: tar -czf astra-telos-linux.tar.gz -C app/build/linux/x64/release/bundle .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: astra-telos-linux.tar.gz
+
+  publish:
+    name: Dinh kem vao ban phat hanh
+    needs: [android, windows, linux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Dinh kem dung 3 tep cai dat
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/apk/astra-telos-android.apk
+            dist/exe/astra-telos-windows.exe
+            dist/linux/astra-telos-linux.tar.gz

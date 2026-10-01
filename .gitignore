@@ -1,0 +1,20 @@
+# Dart / Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+.idea/
+*.iml
+*.g.dart
+*.freezed.dart
+
+# Server runtime (du lieu cuc bo cua tung may)
+server/data/
+server/.dart_tool/
+server/build/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
