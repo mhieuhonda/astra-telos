@@ -18,7 +18,7 @@ UninstallDisplayName=Astra Telos
 SetupIconFile=app\windows\runner\resources\app_icon.ico
 
 [Languages]
-Name: "vietnamese"; MessagesFile: "compiler:Languages\Vietnamese.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "Tao bieu tuong ngoai man hinh"; Flags: unchecked
